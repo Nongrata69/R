@@ -18,6 +18,13 @@ def read_file(file_path):
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError, UnicodeDecodeError):
         return None
+
+def read_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError, UnicodeDecodeError):
+        return None
  
 def get_cached_data(currency, date):
     try:
@@ -279,7 +286,20 @@ def validate_data(data):
  
     return True
  
- 
+def validate_data(data):
+    # Sprawdzenie, czy odczyt pliku był poprawny
+    if data is None:
+        print_error("Nieprawidłowy format pliku JSON lub plik nie został znaleziony. Spróbuj ponownie.")
+        return False
+
+    # Walidacja kluczy
+    missing_keys = validate_database(data)
+    if missing_keys:
+        print_error(f"Plik nie zawiera wymaganych kluczy: {', '.join(missing_keys)} Spróbuj ponownie.")
+        return False
+
+    return True
+
 def run_interactive_mode():
     #Funkcja uruchamiająca tryb interaktywny.
     while True:
